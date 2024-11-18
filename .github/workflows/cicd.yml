@@ -14,7 +14,7 @@ jobs:
       - name: Login to docker hub
         run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
       - name: Build Docker Image
-        run: docker build -t patilprathamesh/nodejs-app  .
+        run: docker build -t patilprathamesh/nodejs-app .
       - name: Publish Image to docker hub
         run: docker push patilprathamesh/nodejs-app:latest
 
@@ -25,6 +25,6 @@ jobs:
       - name: Pull image from docker hub
         run: docker pull patilprathamesh/nodejs-app:latest
       - name: Delete old container
-        run: docker rm -f nodejs-app-container
-      - name: Run Docker Container '${{secrets.MONGO_PASSWORD}}'
-        run: docker run -d -p 9000:9000 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' patilprathamesh/nodejs-app
+        run: docker rm -f nodejs-app-container || true
+      - name: Run Docker Container
+        run: docker run -d -p 9000:9000 --name nodejs-app-container -e MONGO_PASSWORD=${{ secrets.MONGO_PASSWORD }} patilprathamesh/nodejs-app
