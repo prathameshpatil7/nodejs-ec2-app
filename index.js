@@ -1,4 +1,4 @@
-// import express from "express";
+import express from "express";
 // import bodyParser from "body-parser";
 
 // import db from "./mongoC.js";
@@ -46,9 +46,9 @@
 //   console.log("Server is listening at port:" + port);
 // });
 
-const express = require("express");
+// const express = require("express");
 const app = express();
-const port = 8000; // Use port 80 for HTTP traffic
+const port = 9000; // Use port 80 for HTTP traffic
 
 app.get("/test", (req, res) => {
   res.json({ message: "Hello from EC2 API!" });
