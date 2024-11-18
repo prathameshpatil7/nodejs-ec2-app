@@ -1,47 +1,15 @@
 import express from "express";
-import bodyParser from "body-parser";
+import cors from "cors";
+import records from "./routes/record.js";
 
-import db from "./mongoC.js";
-
-const port = 9000;
+const PORT = process.env.PORT || 9000;
 const app = express();
-//api
 
-app.use((_req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "*");
+app.use(cors());
+app.use(express.json());
+app.use("/record", records);
 
-  next();
-});
-
-// Parses the text as url encoded data
-app.use(bodyParser.urlencoded({ extended: true }));
-
-// Parses the text as json
-app.use(bodyParser.json());
-
-app.get("/", (req, res) => {
-  res.send("Hello World, from express");
-});
-
-app.post("/addUser", async (req, res) => {
-  let collection = await db.collection("users");
-  let newDocument = req.body;
-  newDocument.date = new Date();
-  let result = await collection.insertOne(newDocument);
-  console.log("rreq" + req.body);
-  res.send(result).status(204);
-});
-
-app.get("/getUsers", async (req, res) => {
-  let collection = await db.collection("users");
-  let results = await collection
-    .find({})
-
-    .toArray();
-  res.send(results).status(200);
-});
-
-app.listen(port, function () {
-  console.log("Server is listening at port:" + port);
+// start the Express server
+app.listen(PORT, () => {
+  console.log(`Server listening on port ${PORT}`);
 });
