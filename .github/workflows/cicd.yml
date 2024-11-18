@@ -26,5 +26,5 @@ jobs:
         run: docker pull patilprathamesh/nodejs-app:latest
       - name: Delete old container
         run: docker rm -f nodejs-app-container
-      - name: Run Docker Container
+      - name: Run Docker Container '${{secrets.MONGO_PASSWORD}}'
         run: docker run -d -p 9000:9000 --name nodejs-app-container -e MONGO_PASSWORD='${{ secrets.MONGO_PASSWORD }}' patilprathamesh/nodejs-app
