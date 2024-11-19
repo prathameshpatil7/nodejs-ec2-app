@@ -22,4 +22,5 @@ try {
 
 let db = client.db("Nodejs_EC2");
 
+//
 export default db;
