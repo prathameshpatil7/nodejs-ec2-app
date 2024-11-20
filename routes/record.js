@@ -28,20 +28,23 @@ router.get("/:id", async (req, res) => {
   else res.send(result).status(200);
 });
 
-// This section will help you create a new record.
 router.post("/", async (req, res) => {
   try {
-    let newDocument = {
-      name: req.body.name,
-      position: req.body.position,
-      level: req.body.level,
-    };
-    let collection = await db.collection("records");
-    let result = await collection.insertOne(newDocument);
-    res.send(result).status(204);
+    const { name, position, level } = req.body;
+
+    // Validate input
+    if (!name || !position || !level) {
+      return res.status(400).send({ error: "All fields are required" });
+    }
+
+    const newDocument = { name, position, level };
+    const collection = db.collection("records");
+    const result = await collection.insertOne(newDocument);
+
+    res.status(201).send({ id: result.insertedId, ...newDocument });
   } catch (err) {
     console.error(err);
-    res.status(500).send("Error adding record");
+    res.status(500).send({ error: "Error adding record" });
   }
 });
 
@@ -81,4 +84,41 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// API to insert bulk data into MongoDB
+router.post("/bulk-insert", async (req, res) => {
+  try {
+    const collection = db.collection("records");
+
+    // Ensure the data is an array
+    const bulkData = req.body;
+    if (!Array.isArray(bulkData)) {
+      return res
+        .status(400)
+        .json({ error: "Input data must be an array of objects" });
+    }
+
+    // Validate if all items in the array are objects
+    const isValid = bulkData.every(
+      (item) => typeof item === "object" && item !== null
+    );
+    if (!isValid) {
+      return res
+        .status(400)
+        .json({ error: "Each item in the array must be an object" });
+    }
+
+    // Insert the bulk data
+    const result = await collection.insertMany(bulkData);
+
+    // Respond with the result
+    res.status(201).json({
+      message: "Bulk data inserted successfully",
+      insertedCount: result.insertedCount,
+      insertedIds: result.insertedIds,
+    });
+  } catch (error) {
+    console.error("Error inserting bulk data:", error);
+    res.status(500).json({ error: "Failed to insert bulk data" });
+  }
+});
 export default router;
