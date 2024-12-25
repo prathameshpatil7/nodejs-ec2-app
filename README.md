@@ -1,5 +1,3 @@
-Here’s a beautiful and professional `README.md` for your CI/CD full-stack deployment project:  
-
 # 🚀 Full-Stack Application Deployment with CI/CD
 
 This project demonstrates the end-to-end deployment of a **full-stack application** (React.js frontend + Node.js backend) using **Docker**, **GitHub Actions**, and **AWS EC2**. It ensures consistency, scalability, and automation by leveraging modern DevOps practices.  
